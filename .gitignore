@@ -1,0 +1,12 @@
+_
+.env
+dist
+docker
+node_modules
+package-lock.json
+race-async-generator*.tgz
+racinglyIterateAllOld.ts
+scratchpad.ts
+stats.html
+temp.json
+tmp
