@@ -66,14 +66,6 @@
     "noStrictGenericChecks": false,
     "plugins": [{ "name": "@effect/language-service" }]
   },
-  "include": [
-    "types.ts",
-    "errors.ts",
-    "racinglyIterateAll.ts",
-    "racinglyIterateAllOld.ts",
-    "racinglyIterateAll.spec.ts",
-    "racinglyIterateAllOld.spec.ts",
-    "scratchpad.ts",
-    "reset.d.ts"
-  ]
+  "include": ["*.ts"],
+  "exclude": ["vite.config.ts"]
 }

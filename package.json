@@ -5,7 +5,7 @@
   "description": "Iterate over array of promises in for-await-of loops and take actions as soon as promises resolve",
   "license": "MIT",
   "scripts": {
-    "scratchpad": "node ./scratchpad.ts",
+    "scratchpad": "node --use-strict ./scratchpad.ts",
     "test": "vitest --watch",
     "format": "prettier . --write",
     "coverage": "vitest run --coverage",

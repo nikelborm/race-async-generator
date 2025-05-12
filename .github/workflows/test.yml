@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 name: Tests
 on:
   workflow_dispatch:
@@ -25,7 +26,7 @@ jobs:
       - name: 'Install dependencies'
         run: npm install
 
-      - name: 'Compile, build, bundle, report deps graph'
+      - name: 'Compile, build, bundle'
         run: npm run build
 
       - name: 'Test and report coverage'
@@ -36,7 +37,7 @@ jobs:
         with:
           file: ./gh-page/coverage/clover.xml
 
-      - name: 'Upload coverage and bundled deps reports to github pages'
+      - name: 'Upload coverage to github pages'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

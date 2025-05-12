@@ -27,33 +27,39 @@ export function racinglyIterateAll<
   ifOneOfThePromisesRejectsFailWhen ??= 'firstReject';
   const controller = new AbortController();
 
-  const abort = () => controller.abort();
-
-  if (timeoutMs) var timeoutHandle = setTimeout(abort, timeoutMs);
-
-  externalSignal?.addEventListener('abort', abort);
-
-  const notYieldedRacerToItsIndexMap = new Map(
-    promises.map((promiseOrPromiseBuilder, index) => [
-      index,
-      (typeof promiseOrPromiseBuilder === 'function'
-        ? promiseOrPromiseBuilder(controller.signal)
-        : promiseOrPromiseBuilder
-      ).then(
-        result => ({ index, result }),
-        error => ({ index, error }),
-      ) as Promise<GetAUnionOfResolvedResults<U>>,
-    ]),
-  );
-
   const cleanup = () => {
     if (timeoutMs) clearTimeout(timeoutHandle);
 
     console.log('racinglyIterateAll cleanup');
-    externalSignal?.removeEventListener('abort', abort);
+    externalSignal?.removeEventListener('abort', cleanup);
     notYieldedRacerToItsIndexMap.clear();
     controller.abort();
   };
+
+  const timeoutHandle = timeoutMs ? setTimeout(cleanup, timeoutMs) : undefined;
+
+  externalSignal?.addEventListener('abort', cleanup);
+
+  const notYieldedRacerToItsIndexMap = new Map(
+    promises.map((promiseOrPromiseBuilder, index) => {
+      const promise = isPromiseBuilder(promiseOrPromiseBuilder)
+        ? promiseOrPromiseBuilder(controller.signal)
+        : promiseOrPromiseBuilder;
+
+      if (isPromiseLike(promise))
+        return [
+          index,
+          promise.then(
+            result => ({ index, result }),
+            error => ({ index, error }),
+          ) as Promise<GetAUnionOfResolvedResults<U>>,
+        ];
+      else
+        throw new Error(
+          'Promises array argument of racinglyIterateAll is both not promise and not promise builder',
+        );
+    }),
+  );
 
   const errors: ErrorInRacingPromise[] = [];
 
@@ -77,7 +83,8 @@ export function racinglyIterateAll<
         throw(e: unknown): never;
       },
     ) {
-      if (notYieldedRacerToItsIndexMap.size === 0) return this.return();
+      if (notYieldedRacerToItsIndexMap.size === 0 && !controller.signal.aborted)
+        return this.return();
 
       controller.signal.throwIfAborted();
 
@@ -86,6 +93,8 @@ export function racinglyIterateAll<
       // `next` method. Also, this race never throws, because I remap all
       // promise failures to simple wrapper objects
       const racer = await Promise.race(notYieldedRacerToItsIndexMap.values());
+
+      controller.signal.throwIfAborted();
 
       notYieldedRacerToItsIndexMap.delete(racer.index);
 
@@ -116,3 +125,12 @@ export function racinglyIterateAll<
     },
   };
 }
+
+const isPromiseBuilder = (t: unknown): t is Function => typeof t === 'function';
+
+const isPromiseLike = (t: unknown): t is PromiseLike<unknown> =>
+  typeof t === 'object' &&
+  t !== null &&
+  'then' in t &&
+  typeof t.then === 'function' &&
+  t.then.length === 2;

@@ -1,5 +1,6 @@
 _
 .env
+/gh-page/coverage
 dist
 docker
 node_modules
