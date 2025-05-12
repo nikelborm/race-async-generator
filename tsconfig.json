@@ -63,9 +63,8 @@
     "noImplicitUseStrict": false,
     "suppressExcessPropertyErrors": false,
     "suppressImplicitAnyIndexErrors": false,
-    "noStrictGenericChecks": false,
-    "plugins": [{ "name": "@effect/language-service" }]
+    "noStrictGenericChecks": false
   },
-  "include": ["*.ts"],
-  "exclude": ["vite.config.ts"]
+  "include": ["**/*.ts"],
+  "exclude": ["vite.config.ts", "tmp"]
 }
