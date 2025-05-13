@@ -128,6 +128,7 @@ export function racinglyIterateAll<
 
 const isPromiseBuilder = (t: unknown): t is Function => typeof t === 'function';
 
+// TODO: use from a dependency
 const isPromiseLike = (t: unknown): t is PromiseLike<unknown> =>
   typeof t === 'object' &&
   t !== null &&
