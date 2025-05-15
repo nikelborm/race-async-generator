@@ -66,5 +66,5 @@
     "noStrictGenericChecks": false
   },
   "include": ["**/*.ts"],
-  "exclude": ["vite.config.ts", "tmp"]
+  "exclude": ["vite.config.ts", "tmp", "dist"]
 }
