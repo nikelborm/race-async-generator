@@ -20,7 +20,7 @@
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/node": "^25.0.2",
     "@vitest/coverage-v8": "^4.0.4",
-    "jsr": "^0.13.4",
+    "jsr": "^0.14.1",
     "prettier": "^3.5.3",
     "rimraf": "^6.0.1",
     "typescript": "^5.8.3",
