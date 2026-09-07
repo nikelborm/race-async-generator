@@ -19,7 +19,7 @@
   "devDependencies": {
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/node": "^26.0.0",
-    "@vitest/coverage-v8": "^4.0.4",
+    "@vitest/coverage-v8": "^5.0.0",
     "jsr": "^0.14.1",
     "prettier": "^3.5.3",
     "rimraf": "^6.0.1",
